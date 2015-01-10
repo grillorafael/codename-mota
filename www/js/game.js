@@ -1,21 +1,5 @@
 (function() {
     "use strict";
-
-    var game = new Phaser.Game(900, 600, Phaser.AUTO, '', {
-        preload: preload,
-        create: create,
-        update: update
-    });
-
-    function preload() {
-        // TODO
-    }
-
-    function create() {
-        // TODO
-    }
-
-    function update() {
-        // TODO
-    }
+    var game = new Phaser.Game(1136, 640, Phaser.AUTO, 'game');
+    game.state.add('menu', MenuState, true);
 })();
