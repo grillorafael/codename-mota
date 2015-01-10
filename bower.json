@@ -1,0 +1,21 @@
+{
+  "name": "codename-mota",
+  "version": "0.0.1",
+  "authors": [
+    "Rafael Grillo <grillorafael@gmail.com>"
+  ],
+  "description": "Fun with friends",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "www/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "phaser": "~2.2.2"
+  }
+}
