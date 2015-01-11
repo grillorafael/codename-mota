@@ -3,22 +3,26 @@ function Player(game, x, y){
     Phaser.Sprite.call(this, game, x, y, 'player');
     this.configureAnimations();
 
-    //We set the game input as the target
     this.keyboard = game.input.keyboard;
-
-    //The anchor is the 'center point' of the sprite. 0.5, 0.5 means it will be aligned and rotated by its center point.
     this.anchor.setTo(0.5, 0.5);
-
-    //Finally we enable physics so we can move the player around (this is how easy physics is in Phaser)
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
 
-    //Health
+    this.nextShotAt = 0;
+    this.shotDelay = 60;
+
+    this.bullets = [];
     this.health = 100;
+
     game.add.existing(this);
 }
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
+
+Player.preLoadAssets = function(game) {
+    game.load.spritesheet('player', 'assets/sprites/player.png', 105, 103, 16);
+    game.load.image('bullet', 'assets/sprites/bullet.png');
+};
 
 Player.prototype.configureAnimations = function() {
     this.animations.add('walk');
@@ -37,8 +41,22 @@ Player.prototype.update = function() {
     else {
         this.body.velocity.x = 0;
     }
+
+    if(this.keyboard.isDown(Phaser.Keyboard.X)) {
+        this.fireBullet();
+    }
 };
 
-Player.preLoadAssets = function(game) {
-    game.load.spritesheet('player', 'assets/sprites/player.png', 105, 103, 16);
+Player.prototype.fireBullet = function() {
+    if (this.nextShotAt > this.game.time.now) {
+        return;
+    }
+
+    this.nextShotAt = this.game.time.now + this.shotDelay;
+
+    var bullet = this.game.add.sprite(this.x + 20, this.y, 'player');
+    bullet.anchor.setTo(0.5, 0.5);
+    this.game.physics.enable(bullet, Phaser.Physics.ARCADE);
+    bullet.body.velocity.x = 500;
+    this.bullets.push(bullet);
 };
