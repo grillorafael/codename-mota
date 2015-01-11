@@ -4,4 +4,5 @@
 
     game.state.add('menu', MenuState, true);
     game.state.add('about', AboutState, false);
+    game.state.add('stage1', Stage1State, false);
 })();

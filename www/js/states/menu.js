@@ -22,6 +22,13 @@ MenuState.prototype.create = function() {
         this.state.start('about');
     }
 
+    var newGame = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 100, "New Game", Style.Text);
+    newGame.anchor.set(0.5);
+    newGame.inputEnabled = true;
+    newGame.events.onInputDown.add(onNewGameClick, this);
+    function onNewGameClick() {
+        this.state.start('stage1');
+    }
 };
 
 MenuState.prototype.update = function() {
