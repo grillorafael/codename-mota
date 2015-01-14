@@ -1,4 +1,4 @@
-function Player(game, x, y){
+function Player(game, x, y, stage){
     //TODO
     //Here's where we create our player sprite.
     Phaser.Sprite.call(this, game, x, y, 'player');
@@ -22,24 +22,23 @@ function Player(game, x, y){
     this.nextShotAt = 0;
     this.shotDelay = 60;
 
-    this.bullets = [];
+    this.bulletPool = game.add.group();
 
     this.state = 'normal';
 
     // Characters Attributes
     this.health = 100;
     this.shield = 0;
-    this.bulletType = new DefaultBullet(game, this);
+    this.bulletType = new DefaultBullet(game, stage, this);
 
-    // Jump Up and Down
-    // Double Jump Up
-    // Crouch Up and Down
-    // Dash
-    // Shoot
-
-    this.playerSpeed = 500;
+    this.PLAYER_SPEED = 500;
     this.JUMP_SPEED = -500; // pixels/second (negative y is up)
     this.DOUBLE_JUMP_SPEED = -700; // pixels/second (negative y is up)
+    this.DASH_TIME = 300;
+    this.DASH_SPEED = 1000;
+    this.dashStarted = this.game.time.now - this.DASH_TIME;
+    this.dashing = false;
+    this.groundAfterDash = true;
     this.jumps = 0;
 
     game.add.existing(this);
@@ -66,14 +65,14 @@ Player.prototype.configureSpriteBehaviour = function () {
 
 Player.prototype.update = function() {
     if (this.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-        this.body.velocity.x = -this.playerSpeed;
+        this.body.velocity.x = -this.PLAYER_SPEED;
         // player.animations.play('left');
     }
     else if (this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-        this.body.velocity.x = this.playerSpeed;
+        this.body.velocity.x = this.PLAYER_SPEED;
         // player.animations.play('right');
     }
-    else {
+    else if(this.dashing === false){
         this.body.velocity.x = 0;
     }
 
@@ -82,18 +81,40 @@ Player.prototype.update = function() {
     }
 
     this.handleJump();
+    this.handleDash();
 
-    if(this.keyboard.isDown(Phaser.Keyboard.Q)) {
-        this.dash('left');
-    }
-    else if(this.keyboard.isDown(Phaser.Keyboard.E)) {
-        this.dash('right');
+    if(this.body.touching.down) {
+        this.groundAfterDash = true;
     }
 };
 
-Player.prototype.dash = function(orientation) {
-    console.log('[Player] dash', orientation);
-    //TODO
+Player.prototype.handleDash = function() {
+    if(this.dashing === false && this.groundAfterDash) {
+        if(this.keyboard.isDown(Phaser.Keyboard.Q)) {
+            this.dashing = 'left';
+            this.dashStarted = this.game.time.now;
+            this.groundAfterDash = false;
+        }
+        else if(this.keyboard.isDown(Phaser.Keyboard.E)) {
+            this.dashing = 'right';
+            this.dashStarted = this.game.time.now;
+            this.groundAfterDash = false;
+        }
+    }
+    else if((this.game.time.now - this.dashStarted) < this.DASH_TIME) {
+        if(this.dashing === 'right') {
+            this.body.velocity.y = 0;
+            this.body.velocity.x = this.DASH_SPEED;
+        }
+        else if(this.dashing === 'left') {
+            this.body.velocity.y = 0;
+            this.body.velocity.x = -this.DASH_SPEED;
+        }
+    }
+    else {
+        this.body.velocity.x = 0;
+        this.dashing = false;
+    }
 };
 
 Player.prototype.handleJump = function () {
