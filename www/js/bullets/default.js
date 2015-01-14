@@ -11,7 +11,7 @@ function DefaultBullet(game, stage, subject) {
     this.damage = 10;
 }
 
-DefaultBullet.prototype.fire = function() {
+DefaultBullet.prototype.fire = function(orientation) {
     if (this.nextShotAt > this.game.time.now) {
         return;
     }
@@ -25,7 +25,16 @@ DefaultBullet.prototype.fire = function() {
     bullet.anchor.setTo(0.5, 0.5);
     this.game.physics.enable(bullet, Phaser.Physics.ARCADE);
     bullet.body.allowGravity = false;
-    bullet.body.velocity.x = this.bulletVelocity;
+
+    var velocity = this.bulletVelocity;
+    if(orientation == 'left') {
+        velocity = -this.bulletVelocity;
+    }
+    else if(orientation == 'right') {
+        velocity = this.bulletVelocity;
+    }
+
+    bullet.body.velocity.x = velocity;
 
     this.game.physics.arcade.collide(this.subject.bulletPool, this.stage.ground, function(collidedBullet, ground) {
         // Kill the bullet

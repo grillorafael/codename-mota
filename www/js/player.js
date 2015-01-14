@@ -18,28 +18,27 @@ function Player(game, x, y, stage){
 
     this.configureSpriteBehaviour();
 
-
-    this.nextShotAt = 0;
-    this.shotDelay = 60;
-
-    this.bulletPool = game.add.group();
-
-    this.state = 'normal';
-
-    // Characters Attributes
-    this.health = 100;
-    this.shield = 0;
-    this.bulletType = new DefaultBullet(game, stage, this);
-
     this.PLAYER_SPEED = 500;
     this.JUMP_SPEED = -500; // pixels/second (negative y is up)
     this.DOUBLE_JUMP_SPEED = -700; // pixels/second (negative y is up)
     this.DASH_TIME = 300;
     this.DASH_SPEED = 1000;
+
+    this.bulletPool = game.add.group();
+
+    // Characters Attributes
+    this.health = 100;
+    this.shield = 0;
+    this.bulletType = new DefaultBullet(game, stage, this);
+    // Characters Attributes
+
     this.dashStarted = this.game.time.now - this.DASH_TIME;
     this.dashing = false;
     this.groundAfterDash = true;
+
     this.jumps = 0;
+
+    this.aimOrientation = "right";
 
     game.add.existing(this);
 }
@@ -65,10 +64,12 @@ Player.prototype.configureSpriteBehaviour = function () {
 
 Player.prototype.update = function() {
     if (this.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+        this.aimOrientation = 'left';
         this.body.velocity.x = -this.PLAYER_SPEED;
         // player.animations.play('left');
     }
     else if (this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+        this.aimOrientation = 'right';
         this.body.velocity.x = this.PLAYER_SPEED;
         // player.animations.play('right');
     }
@@ -150,5 +151,5 @@ Player.prototype.handleJump = function () {
 Player.prototype.fireBullet = function() {
     console.log('[Player] fireBullet');
     //TODO Shooting direction
-    this.bulletType.fire();
+    this.bulletType.fire(this.aimOrientation);
 };
