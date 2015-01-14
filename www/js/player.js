@@ -5,8 +5,19 @@ function Player(game, x, y){
     this.configureAnimations();
 
     this.keyboard = game.input.keyboard;
-    this.anchor.setTo(0.5, 0.5);
-    this.game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.keyboard.addKeyCapture([
+        Phaser.Keyboard.LEFT,
+        Phaser.Keyboard.RIGHT,
+        Phaser.Keyboard.UP,
+        Phaser.Keyboard.DOWN,
+        Phaser.Keyboard.SPACEBAR,
+        Phaser.Keyboard.X,
+        Phaser.Keyboard.Q,
+        Phaser.Keyboard.E
+    ]);
+
+    this.configureSpriteBehaviour();
+
 
     this.nextShotAt = 0;
     this.shotDelay = 60;
@@ -18,7 +29,7 @@ function Player(game, x, y){
     // Characters Attributes
     this.health = 100;
     this.shield = 0;
-    this.bulletType;
+    this.bulletType = new DefaultBullet(game, this);
 
     // Jump Up and Down
     // Double Jump Up
@@ -26,6 +37,10 @@ function Player(game, x, y){
     // Dash
     // Shoot
 
+    this.playerSpeed = 500;
+    this.JUMP_SPEED = -500; // pixels/second (negative y is up)
+    this.DOUBLE_JUMP_SPEED = -700; // pixels/second (negative y is up)
+    this.jumps = 0;
 
     game.add.existing(this);
 }
@@ -34,25 +49,28 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.preLoadAssets = function(game) {
-    //TODO
     game.load.spritesheet('player', 'assets/sprites/player.png', 105, 103, 16);
     game.load.image('bullet', 'assets/sprites/bullet.png');
 };
 
 Player.prototype.configureAnimations = function() {
-    //TODO
     this.animations.add('walk');
     this.animations.play('walk', 24, true);
 };
 
+Player.prototype.configureSpriteBehaviour = function () {
+    this.anchor.setTo(0.5, 0.5);
+    this.game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.body.collideWorldBounds = true;
+};
+
 Player.prototype.update = function() {
-    //TODO
     if (this.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-        this.body.velocity.x = -150;
+        this.body.velocity.x = -this.playerSpeed;
         // player.animations.play('left');
     }
     else if (this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-        this.body.velocity.x = 150;
+        this.body.velocity.x = this.playerSpeed;
         // player.animations.play('right');
     }
     else {
@@ -63,9 +81,7 @@ Player.prototype.update = function() {
         this.fireBullet();
     }
 
-    if(this.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-        this.jump();
-    }
+    this.handleJump();
 
     if(this.keyboard.isDown(Phaser.Keyboard.Q)) {
         this.dash('left');
@@ -80,31 +96,36 @@ Player.prototype.dash = function(orientation) {
     //TODO
 };
 
-Player.prototype.jump = function() {
-    console.log('[Player] jump');
-    //TODO
-    if(this.state == "normal") {
-        this.state = "jumping";
+Player.prototype.handleJump = function () {
+    var onTheGround = this.body.touching.down;
 
+    if (onTheGround) {
+        this.jumps = 2;
+        this.jumping = false;
     }
-    else if(this.state = "jumping") {
-        this.state = "double_jumping";
 
+    if (this.jumps > 0 && upInputIsActive(150, this.keyboard)) {
+        this.body.velocity.y = this.jumps == 1 ? this.DOUBLE_JUMP_SPEED : this.JUMP_SPEED;
+        this.jumping = true;
+    }
+
+    if (this.jumping && upInputReleased(this.keyboard)) {
+        this.jumps--;
+        this.jumping = false;
+    }
+
+    function upInputIsActive(duration, keyboard) {
+        return keyboard.downDuration(Phaser.Keyboard.SPACEBAR, duration);
+    }
+
+    function upInputReleased(keyboard) {
+        return keyboard.upDuration(Phaser.Keyboard.SPACEBAR);
     }
 };
 
+
 Player.prototype.fireBullet = function() {
     console.log('[Player] fireBullet');
-    //TODO
-    if (this.nextShotAt > this.game.time.now) {
-        return;
-    }
-
-    this.nextShotAt = this.game.time.now + this.shotDelay;
-
-    var bullet = this.game.add.sprite(this.x + 20, this.y, 'player');
-    bullet.anchor.setTo(0.5, 0.5);
-    this.game.physics.enable(bullet, Phaser.Physics.ARCADE);
-    bullet.body.velocity.x = 500;
-    this.bullets.push(bullet);
+    //TODO Shooting direction
+    this.bulletType.fire();
 };
