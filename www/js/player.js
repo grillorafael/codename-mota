@@ -112,7 +112,9 @@ Player.prototype.handleDash = function() {
         }
     }
     else {
-        this.body.velocity.x = 0;
+        if(this.dashing) {
+            this.body.velocity.x = 0;
+        }
         this.dashing = false;
     }
 };
