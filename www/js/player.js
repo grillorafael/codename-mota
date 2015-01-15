@@ -4,6 +4,8 @@ function Player(game, x, y, stage){
     Phaser.Sprite.call(this, game, x, y, 'player');
     this.configureAnimations();
 
+    this.stage = stage;
+
     this.keyboard = game.input.keyboard;
     this.keyboard.addKeyCapture([
         Phaser.Keyboard.LEFT,
@@ -60,6 +62,15 @@ Player.prototype.configureSpriteBehaviour = function () {
     this.anchor.setTo(0.5, 0.5);
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.collideWorldBounds = true;
+};
+
+Player.prototype.regenLife = function(factor) {
+    console.log('Healing player', factor);
+    this.health += factor;
+
+    if(this.health > 100) {
+        this.health = 100;
+    }
 };
 
 Player.prototype.update = function() {
