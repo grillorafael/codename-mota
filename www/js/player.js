@@ -151,5 +151,19 @@ Player.prototype.handleJump = function () {
 Player.prototype.fireBullet = function() {
     console.log('[Player] fireBullet');
     //TODO Shooting direction
-    this.bulletType.fire(this.aimOrientation);
+    var orientation = this.aimOrientation;
+    if(this.keyboard.isDown(Phaser.Keyboard.UP) && this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+        orientation = "upperRight";
+    }
+    else if(this.keyboard.isDown(Phaser.Keyboard.UP) && this.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+        orientation = "upperLeft";
+    }
+    else if(this.keyboard.isDown(Phaser.Keyboard.DOWN) && this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+        orientation = "downRight";
+    }
+    else if(this.keyboard.isDown(Phaser.Keyboard.DOWN) && this.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+        orientation = "downLeft";
+    }
+
+    this.bulletType.fire(orientation);
 };
