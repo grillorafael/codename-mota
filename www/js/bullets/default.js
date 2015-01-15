@@ -50,6 +50,14 @@ DefaultBullet.prototype.fire = function(orientation) {
         velocityX = this.bulletVelocity;
         velocityY = this.bulletVelocity;
     }
+    else if(orientation == 'up') {
+        velocityY = -this.bulletVelocity;
+        velocityX = 0;
+    }
+    else if(orientation == 'down') {
+        velocityX = 0;
+        velocityY = this.bulletVelocity;
+    }
 
     bullet.body.velocity.x = velocityX;
     bullet.body.velocity.y = velocityY;

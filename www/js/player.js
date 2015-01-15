@@ -164,6 +164,12 @@ Player.prototype.fireBullet = function() {
     else if(this.keyboard.isDown(Phaser.Keyboard.DOWN) && this.keyboard.isDown(Phaser.Keyboard.LEFT)) {
         orientation = "downLeft";
     }
+    else if(this.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+        orientation = "down";
+    }
+    else if(this.keyboard.isDown(Phaser.Keyboard.UP)) {
+        orientation = "up";
+    }
 
     this.bulletType.fire(orientation);
 };
