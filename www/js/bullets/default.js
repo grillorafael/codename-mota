@@ -28,8 +28,11 @@ DefaultBullet.prototype.fire = function(orientation) {
 
     var velocityX = this.bulletVelocity;
     var velocityY = 0;
+
+    var angle = 0;
     if(orientation == 'left') {
         velocityX = -this.bulletVelocity;
+        angle = -180;
     }
     else if(orientation == 'right') {
         velocityX = this.bulletVelocity;
@@ -37,30 +40,38 @@ DefaultBullet.prototype.fire = function(orientation) {
     else if(orientation == 'upperRight') {
         velocityX = this.bulletVelocity;
         velocityY = -this.bulletVelocity;
+        angle = -45;
     }
     else if(orientation == 'upperLeft') {
         velocityX = -this.bulletVelocity;
         velocityY = -this.bulletVelocity;
+        angle = -135;
     }
     else if(orientation == 'downLeft') {
         velocityX = -this.bulletVelocity;
         velocityY = this.bulletVelocity;
+        angle = 135;
     }
     else if(orientation == 'downRight') {
         velocityX = this.bulletVelocity;
         velocityY = this.bulletVelocity;
+        angle = 45
     }
     else if(orientation == 'up') {
         velocityY = -this.bulletVelocity;
         velocityX = 0;
+        angle = -90;
     }
     else if(orientation == 'down') {
         velocityX = 0;
         velocityY = this.bulletVelocity;
+        angle = -90;
     }
 
     bullet.body.velocity.x = velocityX;
     bullet.body.velocity.y = velocityY;
+    bullet.angle = angle;
+    console.log(angle);
 
     this.game.physics.arcade.collide(this.subject.bulletPool, this.stage.ground, function(collidedBullet, ground) {
         // Kill the bullet
