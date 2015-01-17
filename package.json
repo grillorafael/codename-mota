@@ -2,7 +2,7 @@
   "name": "codename-mota",
   "version": "1.0.0",
   "description": "## Description None of your business",
-  "main": "index.js",
+  "main": "Gruntfile.js",
   "scripts": {
     "start": "node_modules/.bin/nw www"
   },
