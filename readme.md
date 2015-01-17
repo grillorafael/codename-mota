@@ -6,6 +6,9 @@ None of your business
 ## Running the project
 ```grunt``` inside the projects root folder
 
+## Shortcuts
+1. CTRL + ALT + J to open DevTools
+1. CTRL + ALT + L to close Game
 
 ## Useful resources
 
