@@ -65,7 +65,7 @@ Player.prototype.configureSpriteBehaviour = function () {
 };
 
 Player.prototype.regenLife = function(factor) {
-    console.log('Healing player', factor);
+    Logger.log('Healing player', factor);
     this.health += factor;
 
     if(this.health > 100) {
@@ -160,7 +160,7 @@ Player.prototype.handleJump = function () {
 
 
 Player.prototype.fireBullet = function() {
-    console.log('[Player] fireBullet');
+    Logger.log('[Player] fireBullet');
     //TODO Shooting direction
     var orientation = this.aimOrientation;
     if(this.keyboard.isDown(Phaser.Keyboard.UP) && this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
