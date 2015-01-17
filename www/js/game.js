@@ -9,13 +9,7 @@
 
 function Logger() {};
 Logger.DEBUG = true;
-Logger.log = function(arg1, arg2) {
-    if(Logger.DEBUG) {
-        if(arg2 === undefined) {
-            console.log(arg1);
-        }
-        else {
-            console.log(arg1, arg2);
-        }
-    }
-};
+
+if(!Logger.DEBUG) {
+    console.log = function() {};
+}

@@ -71,11 +71,10 @@ DefaultBullet.prototype.fire = function(orientation) {
     bullet.body.velocity.x = velocityX;
     bullet.body.velocity.y = velocityY;
     bullet.angle = angle;
-    Logger.log(angle);
 
     this.game.physics.arcade.collide(this.subject.bulletPool, this.stage.ground, function(collidedBullet, ground) {
         // Kill the bullet
-        Logger.log('Collision');
+        console.log('Collision');
         collidedBullet.kill();
     }, null, this);
 

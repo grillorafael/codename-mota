@@ -65,7 +65,7 @@ Player.prototype.configureSpriteBehaviour = function () {
 };
 
 Player.prototype.regenLife = function(factor) {
-    Logger.log('Healing player', factor);
+    console.log('Healing player', factor);
     this.health += factor;
 
     if(this.health > 100) {
@@ -77,16 +77,33 @@ Player.prototype.update = function() {
     if (this.keyboard.isDown(Phaser.Keyboard.LEFT)) {
         this.aimOrientation = 'left';
         this.body.velocity.x = -this.PLAYER_SPEED;
-        // player.animations.play('left');
+        if(this.keyboard.isDown(Phaser.Keyboard.UP)) {
+            // player.animations.play('walk_left_up');
+        }
+        else if(this.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+            // player.animations.play('walk_left_down');
+        }
+        else {
+            // player.animations.play('walk_left');
+        }
     }
     else if (this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
         this.aimOrientation = 'right';
         this.body.velocity.x = this.PLAYER_SPEED;
-        // player.animations.play('right');
+        if(this.keyboard.isDown(Phaser.Keyboard.UP)) {
+            // player.animations.play('walk_right_up');
+        }
+        else if(this.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+            // player.animations.play('walk_right_down');
+        }
+        else {
+            // player.animations.play('walk_right');
+        }
     }
     else if(this.dashing === false){
         this.body.velocity.x = 0;
     }
+    // UP AND DOWN SPRITES
 
     if(this.keyboard.isDown(Phaser.Keyboard.X)) {
         this.fireBullet();
@@ -160,7 +177,7 @@ Player.prototype.handleJump = function () {
 
 
 Player.prototype.fireBullet = function() {
-    Logger.log('[Player] fireBullet');
+    console.log('[Player] fireBullet');
     //TODO Shooting direction
     var orientation = this.aimOrientation;
     if(this.keyboard.isDown(Phaser.Keyboard.UP) && this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
