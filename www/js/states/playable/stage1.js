@@ -59,6 +59,10 @@ Stage1State.prototype.shutdown = function() {
 
 };
 
+Stage1State.prototype.render = function() {
+    this.game.debug.text("Player Health: " + this.player.health || '--', 2, 14, "#00ff00");
+};
+
 
 Stage1State.prototype.setVariables = function() {
     this.GRAVITY = 2600; // pixels/second/second

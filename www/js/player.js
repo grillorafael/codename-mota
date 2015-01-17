@@ -29,7 +29,7 @@ function Player(game, x, y, stage){
     this.bulletPool = game.add.group();
 
     // Characters Attributes
-    this.health = 100;
+    this.health = 50;
     this.shield = 0;
     this.bulletType = new DefaultBullet(game, stage, this);
     // Characters Attributes
