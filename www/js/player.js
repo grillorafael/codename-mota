@@ -50,7 +50,6 @@ Player.prototype.constructor = Player;
 
 Player.preLoadAssets = function(game) {
     game.load.spritesheet('player', 'assets/sprites/player.png', 105, 103, 16);
-    game.load.image('bullet', 'assets/sprites/bullet.png');
 };
 
 Player.prototype.configureAnimations = function() {

@@ -6,6 +6,7 @@ Stage1State.prototype.preload = function() {
     //Here you can preload images, audio, spritesheets and so on.
     Player.preLoadAssets(this.game);
     HealthPack.preLoadAssets(this.game);
+    BulletPreloader.preloadAssets(this.game);;
     this.game.load.image('ground', 'assets/sprites/ground.png');
 };
 
