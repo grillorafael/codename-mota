@@ -12,7 +12,7 @@ function DefaultBullet(game, stage, subject) {
 }
 
 DefaultBullet.prototype.configureAnimations = function(bullet) {
-    bullet.animations.add('on_going', [0, 1, 2, 3, 4], 24, true);
+    bullet.animations.add('on_going', [0, 1, 2, 3], 24, true);
     bullet.animations.add('impact', [5, 6, 7, 8, 9], 24, false).killOnComplete = true;
 
     bullet.animations.play('on_going', 24, true);
