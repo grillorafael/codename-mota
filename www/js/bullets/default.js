@@ -1,4 +1,4 @@
-//TODO Handle bullet sprite load
+//
 function DefaultBullet(game, stage, subject) {
     this.stage = stage;
     this.game = game;
