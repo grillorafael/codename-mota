@@ -13,7 +13,7 @@ function DefaultBullet(game, stage, subject) {
 
 DefaultBullet.prototype.configureAnimations = function(bullet) {
     bullet.animations.add('on_going', [0, 1, 2, 3, 4], 24, true);
-    bullet.animations.add('impact', [5, 6, 7, 8, 9], 24, false);
+    bullet.animations.add('impact', [5, 6, 7, 8, 9], 24, false).killOnComplete = true;
 
     bullet.animations.play('on_going', 24, true);
 };
@@ -87,9 +87,6 @@ DefaultBullet.prototype.fire = function(orientation) {
         collidedBullet.body.velocity.x = 0;
         collidedBullet.body.velocity.y = 0;
         collidedBullet.animations.play('impact', 24, false);
-        setTimeout(function() {
-            collidedBullet.kill();
-        }, 200);
     }, null, this);
 
     this.subject.bulletPool.add(bullet);
