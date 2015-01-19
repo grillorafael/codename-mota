@@ -156,7 +156,16 @@ Player.prototype.handleJump = function () {
     }
 
     if (this.jumps > 0 && upInputIsActive(150, this.keyboard)) {
-        this.body.velocity.y = this.jumps == 1 ? this.DOUBLE_JUMP_SPEED : this.JUMP_SPEED;
+        var secondJump = false;
+        if(this.jumps == 2 && !onTheGround && !this.jumping) {
+            this.jumps = 0;
+            secondJump = true;
+        }
+        else if(this.jumps == 1) {
+            secondJump = true;
+        }
+
+        this.body.velocity.y = secondJump ? this.DOUBLE_JUMP_SPEED : this.JUMP_SPEED;
         this.jumping = true;
     }
 
