@@ -9,6 +9,12 @@ function DefaultBullet(game, stage, subject) {
 
     this.bulletVelocity = 1000;
     this.damage = 10;
+
+    this.RELOAD_TIMEOUT = 2000;
+    this.BULLETS_UNTIL_RELOAD = 50;
+    this.reloadStarted = this.game.time.now;
+    this.bulletsSinceLastReload = 0;
+    this.reloading = false;
 }
 
 DefaultBullet.prototype.configureAnimations = function(bullet) {
@@ -30,6 +36,25 @@ DefaultBullet.prototype.update = function() {
 DefaultBullet.prototype.fire = function(orientation) {
     if (this.nextShotAt > this.game.time.now) {
         return;
+    }
+
+    if(this.reloading && (this.game.time.now - this.reloadStarted) >= this.RELOAD_TIMEOUT) {
+        console.log('reload over');
+        this.reloading = false;
+        this.bulletsSinceLastReload = 0;
+    }
+
+    if(this.reloading) {
+        return;
+    }
+
+    if(this.bulletsSinceLastReload >= this.BULLETS_UNTIL_RELOAD && !this.reloading) {
+        console.log('start reload');
+        this.reloading = true;
+        this.reloadStarted = this.game.time.now;
+    }
+    else {
+        this.bulletsSinceLastReload++;
     }
 
     this.nextShotAt = this.game.time.now + this.shotDelay;
