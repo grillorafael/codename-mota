@@ -8,6 +8,8 @@ Stage1State.prototype.preload = function() {
     HealthPack.preLoadAssets(this.game);
     BulletPreloader.preloadAssets(this.game);;
     this.game.load.image('ground', 'assets/sprites/ground.png');
+
+    this.game.time.advancedTiming = true;
 };
 
 Stage1State.prototype.create = function() {
@@ -37,23 +39,17 @@ Stage1State.prototype.create = function() {
         this.ground.add(groundBlock);
     }
 
-    // Configuring healthPacks
-    var healthPack = new HealthPack(this.game, this.game.width/3, this.game.height - 52);
-    this.healthPacks.add(healthPack);
-
     this.player = new Player(this.game, this.game.width/2, this.game.height - 103, this);
+
+    // Configuring healthPacks
+    var healthPack = new HealthPack(this.game, this.player, this, this.game.width/3, this.game.height - 52);
+    this.healthPacks.add(healthPack);
 };
 
 Stage1State.prototype.update = function() {
     //This method is called every frame.
     this.game.physics.arcade.collide(this.player, this.ground);
     this.game.physics.arcade.collide(this.healthPacks, this.ground);
-
-    // TODO WHERE IS THE BEST PLACE TO DO THIS?
-    this.game.physics.arcade.overlap(this.player, this.healthPacks, function(player, healthPack) {
-        player.regenLife(healthPack.regenFactor);
-        healthPack.kill();
-    }, null, this);
 };
 
 Stage1State.prototype.shutdown = function() {
@@ -62,6 +58,7 @@ Stage1State.prototype.shutdown = function() {
 
 Stage1State.prototype.render = function() {
     this.game.debug.text("Player Health: " + this.player.health || '--', 2, 14, "#00ff00");
+    this.game.debug.text(this.game.time.fps || '--', 2, 44, "#00ff00");
 };
 
 

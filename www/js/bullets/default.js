@@ -18,6 +18,15 @@ DefaultBullet.prototype.configureAnimations = function(bullet) {
     bullet.animations.play('on_going', 24, true);
 };
 
+DefaultBullet.prototype.update = function() {
+    this.game.physics.arcade.collide(this.subject.bulletPool, this.stage.ground, function(collidedBullet, ground) {
+        collidedBullet.angle = Math.floor(Math.random() * 180) + -180;
+        collidedBullet.body.velocity.x = 0;
+        collidedBullet.body.velocity.y = 0;
+        collidedBullet.animations.play('impact', 24, false);
+    }, null, this);
+}
+
 DefaultBullet.prototype.fire = function(orientation) {
     if (this.nextShotAt > this.game.time.now) {
         return;
@@ -80,14 +89,6 @@ DefaultBullet.prototype.fire = function(orientation) {
     bullet.angle = angle;
 
     this.configureAnimations(bullet);
-
-    this.game.physics.arcade.collide(this.subject.bulletPool, this.stage.ground, function(collidedBullet, ground) {
-        // Kill the bullet
-        console.log('Collision');
-        collidedBullet.body.velocity.x = 0;
-        collidedBullet.body.velocity.y = 0;
-        collidedBullet.animations.play('impact', 24, false);
-    }, null, this);
 
     this.subject.bulletPool.add(bullet);
 };

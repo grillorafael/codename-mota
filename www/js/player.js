@@ -114,6 +114,8 @@ Player.prototype.update = function() {
     if(this.body.touching.down) {
         this.groundAfterDash = true;
     }
+
+    this.bulletType.update();
 };
 
 Player.prototype.handleDash = function() {
