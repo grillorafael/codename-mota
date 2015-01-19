@@ -31,30 +31,15 @@ DefaultBullet.prototype.update = function() {
         collidedBullet.body.velocity.y = 0;
         collidedBullet.animations.play('impact', 24, false);
     }, null, this);
-}
+};
 
 DefaultBullet.prototype.fire = function(orientation) {
     if (this.nextShotAt > this.game.time.now) {
         return;
     }
 
-    if(this.reloading && (this.game.time.now - this.reloadStarted) >= this.RELOAD_TIMEOUT) {
-        console.log('reload over');
-        this.reloading = false;
-        this.bulletsSinceLastReload = 0;
-    }
-
-    if(this.reloading) {
+    if(this.checkReload()) {
         return;
-    }
-
-    if(this.bulletsSinceLastReload >= this.BULLETS_UNTIL_RELOAD && !this.reloading) {
-        console.log('start reload');
-        this.reloading = true;
-        this.reloadStarted = this.game.time.now;
-    }
-    else {
-        this.bulletsSinceLastReload++;
     }
 
     this.nextShotAt = this.game.time.now + this.shotDelay;
@@ -116,4 +101,23 @@ DefaultBullet.prototype.fire = function(orientation) {
     this.configureAnimations(bullet);
 
     this.subject.bulletPool.add(bullet);
+};
+
+DefaultBullet.prototype.checkReload = function() {
+    if(this.reloading && (this.game.time.now - this.reloadStarted) >= this.RELOAD_TIMEOUT) {
+        this.reloading = false;
+        this.bulletsSinceLastReload = 0;
+    }
+    if(this.reloading) {
+        return true;
+    }
+    if(this.bulletsSinceLastReload >= this.BULLETS_UNTIL_RELOAD && !this.reloading) {
+        this.reloading = true;
+        this.reloadStarted = this.game.time.now;
+    }
+    else {
+        this.bulletsSinceLastReload++;
+    }
+
+    return false;
 };
