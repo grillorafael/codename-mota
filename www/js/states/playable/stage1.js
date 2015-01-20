@@ -22,7 +22,6 @@ Stage1State.prototype.create = function() {
     this.healthPacks = this.game.add.group();
 
     this.game.world.setBounds(0, 0, 1920, 1200);
-    console.log(this.game.world.bounds.width);
 
     // Configuring platforms
     for(var x = 0; x < this.game.world.bounds.width; x += 32) {

@@ -1,4 +1,3 @@
-//
 function DefaultBullet(game, stage, subject) {
     this.stage = stage;
     this.game = game;
@@ -36,16 +35,9 @@ DefaultBullet.prototype.configureAnimations = function(bullet) {
     bullet.animations.play('on_going', 24, true);
 };
 
-DefaultBullet.prototype.update = function() {
-    this.game.physics.arcade.collide(this.subject.bulletPool, this.stage.ground, function(collidedBullet, ground) {
-        collidedBullet.angle = Math.floor(Math.random() * 180) + -180;
-        collidedBullet.body.velocity.x = 0;
-        collidedBullet.body.velocity.y = 0;
-        collidedBullet.animations.play('impact', 24, false);
-    }, null, this);
-};
+DefaultBullet.prototype.fire = function(rightPosition, orientation) {
+    var _this = this;
 
-DefaultBullet.prototype.fire = function(orientation) {
     if (this.nextShotAt > this.game.time.now) {
         return;
     }
@@ -55,14 +47,6 @@ DefaultBullet.prototype.fire = function(orientation) {
     }
 
     this.nextShotAt = this.game.time.now + this.shotDelay;
-
-    // TODO Enhance player height
-    var bullet = this.game.add.sprite(this.subject.x + 20, this.subject.y, 'default_bullet');
-
-    // Check if bullets have collided with the ground
-    bullet.anchor.setTo(0.5, 0.5);
-    this.game.physics.enable(bullet, Phaser.Physics.ARCADE);
-    bullet.body.allowGravity = false;
 
     var velocityX = this.bulletVelocity;
     var velocityY = 0;
@@ -106,12 +90,23 @@ DefaultBullet.prototype.fire = function(orientation) {
         angle = -90;
     }
 
+    var bullet = this.game.add.sprite(this.subject.x + 20, this.subject.y, 'default_bullet');
+    bullet.update = function() {
+        _this.update.call(_this, this);
+    };
+
+    // Check if bullets have collided with the ground
+    bullet.anchor.setTo(0.5, 0.5);
+    this.game.physics.enable(bullet, Phaser.Physics.ARCADE);
+    bullet.body.allowGravity = false;
+
     bullet.body.velocity.x = velocityX;
     bullet.body.velocity.y = velocityY;
     bullet.angle = angle;
 
-    this.configureAnimations(bullet);
+    //bullet.body.collideWorldBounds = true;
 
+    this.configureAnimations(bullet);
     this.subject.bulletPool.add(bullet);
 };
 
@@ -132,4 +127,17 @@ DefaultBullet.prototype.checkReload = function() {
     }
 
     return false;
+};
+
+DefaultBullet.prototype.update = function(bullet) {
+    var _this = this;
+    this.game.physics.arcade.collide(this.subject.bulletPool, this.stage.ground, function(collidedBullet, ground) {
+        collidedBullet.angle = Math.floor(Math.random() * 180) + -180;
+        collidedBullet.body.velocity.x = 0;
+        collidedBullet.body.velocity.y = 0;
+        collidedBullet.animations.play('impact', 24, false);
+        setTimeout(function() {
+            _this.subject.bulletPool.remove(collidedBullet);
+        }, 500);
+    }, null, this.stage);
 };

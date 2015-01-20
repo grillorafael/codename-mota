@@ -42,6 +42,9 @@ function Player(game, x, y, stage){
 
     this.aimOrientation = "right";
 
+    this.sfx = {};
+    this.configureSfx();
+
     game.add.existing(this);
 }
 
@@ -50,6 +53,14 @@ Player.prototype.constructor = Player;
 
 Player.preLoadAssets = function(game) {
     game.load.spritesheet('player', 'assets/sprites/player.png', 105, 103, 16);
+
+    game.load.audio('dash', [
+        'assets/audio/dash.wav'
+    ]);
+};
+
+Player.prototype.configureSfx = function() {
+    this.sfx.dash = this.game.add.audio('dash');
 };
 
 Player.prototype.configureAnimations = function() {
@@ -64,7 +75,6 @@ Player.prototype.configureSpriteBehaviour = function () {
 };
 
 Player.prototype.regenLife = function(factor) {
-    console.log('Healing player', factor);
     this.health += factor;
 
     if(this.health > 100) {
@@ -114,18 +124,18 @@ Player.prototype.update = function() {
     if(this.body.touching.down) {
         this.groundAfterDash = true;
     }
-
-    this.bulletType.update();
 };
 
 Player.prototype.handleDash = function() {
     if(this.dashing === false && this.groundAfterDash) {
         if(this.keyboard.isDown(Phaser.Keyboard.Q)) {
+            this.sfx.dash.play();
             this.dashing = 'left';
             this.dashStarted = this.game.time.now;
             this.groundAfterDash = false;
         }
         else if(this.keyboard.isDown(Phaser.Keyboard.E)) {
+            this.sfx.dash.play();
             this.dashing = 'right';
             this.dashStarted = this.game.time.now;
             this.groundAfterDash = false;
@@ -187,8 +197,6 @@ Player.prototype.handleJump = function () {
 
 
 Player.prototype.fireBullet = function() {
-    console.log('[Player] fireBullet');
-    //TODO Shooting direction
     var orientation = this.aimOrientation;
     if(this.keyboard.isDown(Phaser.Keyboard.UP) && this.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
         orientation = "upperRight";
@@ -209,5 +217,8 @@ Player.prototype.fireBullet = function() {
         orientation = "up";
     }
 
-    this.bulletType.fire(orientation);
+    this.bulletType.fire({
+        x: 10,
+        y: 0
+    }, orientation);
 };

@@ -6,10 +6,3 @@
     game.state.add('about', AboutState, false);
     game.state.add('stage1', Stage1State, true);
 })();
-
-function Logger() {};
-Logger.DEBUG = true;
-
-if(!Logger.DEBUG) {
-    console.log = function() {};
-}
