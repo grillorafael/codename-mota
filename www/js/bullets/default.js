@@ -18,8 +18,20 @@ function DefaultBullet(game, stage, subject) {
 }
 
 DefaultBullet.prototype.configureAnimations = function(bullet) {
-    bullet.animations.add('on_going', [0, 1, 2, 3], 24, true);
-    bullet.animations.add('impact', [4, 5, 6, 7, 8, 9], 24, false).killOnComplete = true;
+    bullet.animations.add('on_going', [
+        'default_bullet/1',
+        'default_bullet/2',
+        'default_bullet/3',
+        'default_bullet/4'
+    ], 24, true);
+    bullet.animations.add('impact', [
+        'default_bullet/5',
+        'default_bullet/6',
+        'default_bullet/7',
+        'default_bullet/8',
+        'default_bullet/9',
+        'default_bullet/10'
+    ], 24, false).killOnComplete = true;
 
     bullet.animations.play('on_going', 24, true);
 };
